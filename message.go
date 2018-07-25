@@ -215,7 +215,7 @@ type MessageIOS struct {
 	Type         int                    `json:"message_type"`
 	Custom       map[string]interface{} `json:"custom,omitempty"`
 	Raw          string                 `json:"raw,omitempty"`
-	AlertStr     string                 `json:"alert,omitempty"`
+	Alert        *IosAlert              `json:"alert,omitempty"`
 	AlertJo      []string               `json:"alert,omitempty"`
 	Badge        int                    `json:"badge"`
 	Sound        string                 `json:"sound"`
@@ -225,13 +225,19 @@ type MessageIOS struct {
 	Environment  int                    `json:"environment"`
 }
 
+//ios alert
+type IosAlert struct {
+	Title string `json:"title"`
+	Body  string `json:"body"`
+}
+
 func NewMessageIOS() *MessageIOS {
 	return &MessageIOS{
 		Type:         TYPE_APNS_NOTIFICATION,
 		SendTime:     time.Now().Format(DATETIMEFORMAT),
 		AcceptTime:   nil,
 		Raw:          "",
-		AlertStr:     "",
+		Alert:        nil,
 		AlertJo:      make([]string, 0),
 		Badge:        1,
 		Sound:        "beep.wav",
@@ -242,15 +248,16 @@ func NewMessageIOS() *MessageIOS {
 	}
 }
 
-func EasyMessageIOS(alert string, env int) *MessageIOS {
+func EasyMessageIOS(title, content string, env int) *MessageIOS {
 	msg := NewMessageIOS()
-	msg.AlertStr = alert
+	alert := IosAlert{Title: title, Body: content}
+	msg.Alert = &alert
 	msg.Environment = env
 	return msg
 }
 
-func (s *MessageIOS) SetAlert(alert string) {
-	s.AlertStr = alert
+func (s *MessageIOS) SetAlert(alert *IosAlert) {
+	s.Alert = alert
 }
 
 func (s *MessageIOS) SetCustom(custom map[string]interface{}) {
@@ -325,7 +332,7 @@ func (s *MessageIOS) IsValid() bool {
 		return true
 	}
 
-	return s.AlertStr != "" || len(s.AlertJo) > 0
+	return s.Alert != nil || len(s.AlertJo) > 0
 }
 
 func (s *MessageIOS) ToJSON() string {
@@ -349,7 +356,7 @@ func (s *MessageIOS) ToJSON() string {
 		if len(s.AlertJo) > 0 {
 			aps["alert"] = s.AlertJo
 		} else {
-			aps["alert"] = s.AlertStr
+			aps["alert"] = s.Alert
 		}
 
 		if s.Badge != 0 {

@@ -267,10 +267,10 @@ func PushTagAndroid(accessId int64, secretKey, title, content, tag string) XgRes
 /**
  * iOS 平台推送消息给单个设备
  */
-func PushTokenIOS(accessId int64, secretKey, content, deviceToken string, env int) XgResponse {
+func PushTokenIOS(accessId int64, secretKey, title, content, deviceToken string, env int) XgResponse {
 	params := initParams()
 	params["device_token"] = deviceToken
-	message := EasyMessageIOS(content, env)
+	message := EasyMessageIOS(title, content, env)
 	params["message"] = message.ToJSON()
 	c := NewClient(accessId, secretKey)
 	return c.push(RESTAPI_PUSHSINGLEDEVICE, message, params)
@@ -279,10 +279,10 @@ func PushTokenIOS(accessId int64, secretKey, content, deviceToken string, env in
 /**
  * iOS 平台推送消息给单个账号
  */
-func PushAccountIOS(accessId int64, secretKey, content, account string, env int) XgResponse {
+func PushAccountIOS(accessId int64, secretKey, title, content, account string, env int) XgResponse {
 	params := initParams()
 	params["account"] = account
-	message := EasyMessageIOS(content, env)
+	message := EasyMessageIOS(title, content, env)
 	params["message"] = message.ToJSON()
 	c := NewClient(accessId, secretKey)
 	return c.push(RESTAPI_PUSHSINGLEACCOUNT, message, params)
@@ -291,10 +291,11 @@ func PushAccountIOS(accessId int64, secretKey, content, account string, env int)
 /**
  * iOS 平台推送消息给所有设备
  */
-func PushAllIOS(accessId int64, secretKey, content string, env int) XgResponse {
+func PushAllIOS(accessId int64, secretKey, title, content string, env int) XgResponse {
 	params := initParams()
-	message := EasyMessageIOS(content, env)
+	message := EasyMessageIOS(title, content, env)
 	params["message"] = message.ToJSON()
+	fmt.Println("params")
 	c := NewClient(accessId, secretKey)
 	return c.push(RESTAPI_PUSHALLDEVICE, message, params)
 }
@@ -302,8 +303,8 @@ func PushAllIOS(accessId int64, secretKey, content string, env int) XgResponse {
 /**
  * iOS 平台推送消息给标签选中设备
  */
-func PushTagIOS(accessId int64, secretKey, content, tag string, env int) XgResponse {
-	message := EasyMessageIOS(content, env)
+func PushTagIOS(accessId int64, secretKey, title, content, tag string, env int) XgResponse {
+	message := EasyMessageIOS(title, content, env)
 	c := NewClient(accessId, secretKey)
 	tagList := []string{tag}
 	return c.PushTags(tagList, "OR", message)
