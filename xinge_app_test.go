@@ -7,10 +7,10 @@ import (
 )
 
 var (
-	accessId       int64    = 2100294174
-	secretKey      string   = "c60de9af49e9163dd0245d5f08cf0a97"
-	accessIdIOS    int64    = 2200294252
-	secretKeyIOS   string   = "32323692558b98234691bf5e01e20878"
+	accessId       int64    = 111122
+	secretKey      string   = "sfdsffdsdfdsf"
+	accessIdIOS    int64    = 23344555
+	secretKeyIOS   string   = "dfsdfsdfsfsdf"
 	account        string   = "9"
 	account_list   []string = []string{"I2NF56YKW41N", "I2NF56YKW41N", "I2NF56YKW41N"}
 	clientT        *Client  = NewClient(accessId, secretKey)
